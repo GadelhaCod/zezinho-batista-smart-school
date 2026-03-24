@@ -1,10 +1,18 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Camera } from "lucide-react";
+import { Camera, Eye, EyeOff, Check, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+const PASSWORD_RULES = [
+  { label: "Mínimo de 8 caracteres", test: (p: string) => p.length >= 8 },
+  { label: "Letra maiúscula", test: (p: string) => /[A-Z]/.test(p) },
+  { label: "Letra minúscula", test: (p: string) => /[a-z]/.test(p) },
+  { label: "Número", test: (p: string) => /[0-9]/.test(p) },
+  { label: "Caractere especial (!@#$%...)", test: (p: string) => /[^A-Za-z0-9]/.test(p) },
+];
 
 const CadastroProfessores = () => {
   const { toast } = useToast();
@@ -12,15 +20,26 @@ const CadastroProfessores = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [streaming, setStreaming] = useState(false);
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [form, setForm] = useState({
     nome: "",
     email: "",
     cpf: "",
+    senha: "",
+    confirmarSenha: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
+
+  const passwordValid = useMemo(
+    () => PASSWORD_RULES.every((r) => r.test(form.senha)),
+    [form.senha]
+  );
+
+  const passwordsMatch = form.senha === form.confirmarSenha && form.confirmarSenha.length > 0;
 
   const startCamera = useCallback(async () => {
     try {
@@ -48,6 +67,14 @@ const CadastroProfessores = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!passwordValid) {
+      toast({ title: "❌ A senha não atende aos requisitos de segurança.", variant: "destructive" });
+      return;
+    }
+    if (!passwordsMatch) {
+      toast({ title: "❌ As senhas não coincidem.", variant: "destructive" });
+      return;
+    }
     toast({ title: "✅ Professor cadastrado com sucesso!" });
   };
 
@@ -80,6 +107,79 @@ const CadastroProfessores = () => {
               <Label htmlFor="cpf">CPF</Label>
               <Input id="cpf" name="cpf" placeholder="000.000.000-00" value={form.cpf} onChange={handleChange} required />
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-md border-none">
+          <CardHeader>
+            <CardTitle className="text-base text-foreground">Senha de Acesso</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="senha">Senha</Label>
+              <div className="relative">
+                <Input
+                  id="senha"
+                  name="senha"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Crie uma senha segura"
+                  value={form.senha}
+                  onChange={handleChange}
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="confirmarSenha">Confirmar Senha</Label>
+              <div className="relative">
+                <Input
+                  id="confirmarSenha"
+                  name="confirmarSenha"
+                  type={showConfirm ? "text" : "password"}
+                  placeholder="Repita a senha"
+                  value={form.confirmarSenha}
+                  onChange={handleChange}
+                  required
+                />
+                <button
+                  type="button"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  onClick={() => setShowConfirm(!showConfirm)}
+                >
+                  {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              {form.confirmarSenha.length > 0 && !passwordsMatch && (
+                <p className="text-xs text-destructive mt-1">As senhas não coincidem.</p>
+              )}
+            </div>
+            {form.senha.length > 0 && (
+              <div className="md:col-span-2 space-y-1 mt-1">
+                <p className="text-xs font-medium text-muted-foreground mb-1">Requisitos da senha:</p>
+                {PASSWORD_RULES.map((rule) => {
+                  const passed = rule.test(form.senha);
+                  return (
+                    <div key={rule.label} className="flex items-center gap-1.5 text-xs">
+                      {passed ? (
+                        <Check className="h-3.5 w-3.5 text-primary" />
+                      ) : (
+                        <X className="h-3.5 w-3.5 text-destructive" />
+                      )}
+                      <span className={passed ? "text-primary" : "text-muted-foreground"}>
+                        {rule.label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </CardContent>
         </Card>
 
