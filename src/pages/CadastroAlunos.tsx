@@ -1,16 +1,13 @@
-import { useState, useRef, useCallback } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Camera } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import FaceDetectionCamera from "@/components/FaceDetectionCamera";
 
 const CadastroAlunos = () => {
   const { toast } = useToast();
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [streaming, setStreaming] = useState(false);
   const [capturedPhotos, setCapturedPhotos] = useState<string[]>([]);
   const [form, setForm] = useState({
     nome: "",
@@ -29,33 +26,8 @@ const CadastroAlunos = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const startCamera = useCallback(async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        setStreaming(true);
-      }
-    } catch {
-      toast({ title: "❌ Erro ao acessar a câmera", variant: "destructive" });
-    }
-  }, [toast]);
-
-  const capturePhoto = () => {
-    if (!videoRef.current || !canvasRef.current) return;
-    const ctx = canvasRef.current.getContext("2d");
-    if (!ctx) return;
-    canvasRef.current.width = videoRef.current.videoWidth;
-    canvasRef.current.height = videoRef.current.videoHeight;
-    ctx.drawImage(videoRef.current, 0, 0);
-    const dataUrl = canvasRef.current.toDataURL("image/jpeg");
-    setCapturedPhotos((prev) => [...prev, dataUrl]);
-    toast({ title: "✅ Foto capturada com sucesso!" });
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: integrate with Supabase
     toast({ title: "✅ Aluno cadastrado com sucesso!" });
   };
 
@@ -119,49 +91,24 @@ const CadastroAlunos = () => {
           </CardContent>
         </Card>
 
-        {/* Camera + Photos */}
-        <Card className="shadow-md border-none">
-          <CardHeader>
-            <CardTitle className="text-base text-foreground">Fotos do Aluno</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center gap-4">
-            <div className="relative w-full max-w-sm aspect-video bg-muted rounded-lg overflow-hidden">
-              <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                muted
-                className="w-full h-full object-cover"
-              />
-              {!streaming && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Button type="button" variant="outline" onClick={startCamera}>
-                    <Camera className="mr-2 h-4 w-4" /> Iniciar Câmera
-                  </Button>
-                </div>
-              )}
-            </div>
-            <canvas ref={canvasRef} className="hidden" />
-            {streaming && (
-              <Button type="button" onClick={capturePhoto} className="bg-primary text-primary-foreground hover:bg-primary/90">
-                Tirar Foto
-              </Button>
-            )}
+        <FaceDetectionCamera
+          onCapture={(dataUrl) => setCapturedPhotos((prev) => [...prev, dataUrl])}
+          multiple
+          title="Fotos do Aluno com Reconhecimento Facial"
+        />
 
-            {capturedPhotos.length > 0 && (
-              <div className="flex gap-2 flex-wrap">
-                {capturedPhotos.map((p, i) => (
-                  <img key={i} src={p} alt={`Foto ${i + 1}`} className="w-20 h-20 rounded-md object-cover border" />
-                ))}
-              </div>
-            )}
+        {capturedPhotos.length > 0 && (
+          <div className="flex gap-2 flex-wrap">
+            {capturedPhotos.map((p, i) => (
+              <img key={i} src={p} alt={`Foto ${i + 1}`} className="w-20 h-20 rounded-md object-cover border" />
+            ))}
+          </div>
+        )}
 
-            <div className="w-full">
-              <Label>Upload de Fotos Adicionais (3 a 5)</Label>
-              <Input type="file" accept="image/*" multiple className="mt-1" />
-            </div>
-          </CardContent>
-        </Card>
+        <div className="w-full">
+          <Label>Upload de Fotos Adicionais (3 a 5)</Label>
+          <Input type="file" accept="image/*" multiple className="mt-1" />
+        </div>
 
         <div className="flex gap-3">
           <Button type="submit" className="bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg transition-all">
