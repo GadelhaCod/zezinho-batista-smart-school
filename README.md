@@ -1,4 +1,8 @@
-# Welcome to your Lovable project
+## 🌐 Acesso ao Sistema
+
+O sistema pode ser acessado online pelo link:
+
+https://zezinho-batista-smart-school.vercel.app/administradores
 
 # Zezinho Batista Smart School
 
