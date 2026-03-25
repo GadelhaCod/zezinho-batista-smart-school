@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Zezinho Batista Smart School</title>
+    <script>
+      var segmentCount = 1;
+      var l = window.location;
+      var path = l.pathname.slice(1)
+        .split('/').slice(segmentCount).join('/');
+      sessionStorage.redirect =
+        l.protocol + '//' + l.hostname +
+        (l.port ? ':' + l.port : '') +
+        l.pathname.split('/')
+          .slice(0, 1 + segmentCount).join('/') +
+        '/?' +
+        (path ? 'p=' + path : '') +
+        (l.search.slice(1)
+          ? '&q=' + l.search.slice(1) : '') +
+        (l.hash.slice(1)
+          ? '&h=' + l.hash.slice(1) : '');
+      location.href = sessionStorage.redirect;
+    </script>
+  </head>
+  <body></body>
+</html>
