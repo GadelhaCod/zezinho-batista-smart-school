@@ -11,6 +11,7 @@ const CadastroAlunos = lazy(() => import("@/pages/CadastroAlunos"));
 const CadastroProfessores = lazy(() => import("@/pages/CadastroProfessores"));
 const CadastroAdministradores = lazy(() => import("@/pages/CadastroAdministradores"));
 const Relatorios = lazy(() => import("@/pages/Relatorios"));
+const PainelAdmin = lazy(() => import("@/pages/PainelAdmin"));
 
 const queryClient = new QueryClient();
 

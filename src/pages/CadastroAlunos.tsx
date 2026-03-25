@@ -69,10 +69,6 @@ const CadastroAlunos = () => {
               <Input id="numero_matricula" name="numero_matricula" placeholder="Matrícula" value={form.numero_matricula} onChange={handleChange} required />
             </div>
             <div>
-              <Label htmlFor="cpf">CPF</Label>
-              <Input id="cpf" name="cpf" placeholder="000.000.000-00" value={form.cpf} onChange={handleChange} />
-            </div>
-            <div>
               <Label htmlFor="contato_pai">Contato do Pai/Responsável</Label>
               <Input id="contato_pai" name="contato_pai" placeholder="(00) 00000-0000" value={form.contato_pai} onChange={handleChange} />
             </div>

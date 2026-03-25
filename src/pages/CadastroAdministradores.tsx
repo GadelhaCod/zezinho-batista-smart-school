@@ -16,6 +16,7 @@ const CadastroAdministradores = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     toast({ title: "✅ Administrador cadastrado com sucesso!" });
+    window.location.href = "/painel-admin";
   };
 
   return (
