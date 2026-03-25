@@ -52,7 +52,16 @@ const [form, setForm] = useState({ nome: "", email: "", senha: "", confirmarSenh
               <Input id="email" name="email" type="email" placeholder="admin@escola.edu.br" value={form.email} onChange={handleChange} required />
             </div>
             <div className="md:col-span-2">
-              <PasswordField value={form.senha} onChange={(val) => setForm({ ...form, senha: val })} />
+              <PasswordField
+                senha={form.senha}
+                confirmarSenha={form.confirmarSenha}
+                showPassword={showPassword}
+                showConfirm={showConfirm}
+                onSenhaChange={(val) => setForm({ ...form, senha: val })}
+                onConfirmarSenhaChange={(val) => setForm({ ...form, confirmarSenha: val })}
+                onTogglePassword={() => setShowPassword(!showPassword)}
+                onToggleConfirm={() => setShowConfirm(!showConfirm)}
+              />
             </div>
           </CardContent>
         </Card>
