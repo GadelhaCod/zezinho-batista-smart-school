@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Users, GraduationCap, Clock, UserCheck } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import FaceDetectionCamera from "@/components/FaceDetectionCamera";
+import { useToast } from "@/hooks/use-toast";
 
 const stats = [
   {
@@ -34,6 +36,17 @@ const recentEntries = [
 ];
 
 const Dashboard = () => {
+  const { toast } = useToast();
+  const [lastCapture, setLastCapture] = useState<string | null>(null);
+
+  const handleAttendanceCapture = (dataUrl: string) => {
+    setLastCapture(dataUrl);
+    toast({
+      title: "📸 Registro de frequência capturado!",
+      description: "A imagem será processada para identificação do aluno/professor.",
+    });
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -66,6 +79,42 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         ))}
+      </div>
+
+      {/* Face detection camera for attendance */}
+      <div>
+        <h3 className="text-lg font-semibold text-foreground mb-4">
+          Registro de Frequência por Reconhecimento Facial
+        </h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <FaceDetectionCamera
+            onCapture={handleAttendanceCapture}
+            title="Câmera de Frequência — Detecção Facial"
+          />
+          <Card className="shadow-md border-none">
+            <CardHeader>
+              <CardTitle className="text-base text-foreground">Último Registro</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center justify-center gap-4">
+              {lastCapture ? (
+                <>
+                  <img
+                    src={lastCapture}
+                    alt="Último registro"
+                    className="w-40 h-40 rounded-xl object-cover border-2 border-primary"
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Captura realizada — aguardando identificação
+                  </p>
+                </>
+              ) : (
+                <p className="text-muted-foreground text-sm text-center py-8">
+                  Nenhuma captura realizada. Inicie a câmera para registrar a frequência.
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       </div>
 
       {/* Recent entries */}

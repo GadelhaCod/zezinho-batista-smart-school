@@ -15,7 +15,7 @@ const CadastroAlunos = () => {
     serie: "",
     email: "",
     numero_matricula: "",
-    cpf: "",
+    
     contato_pai: "",
     email_pai: "",
     horario_entrada: "",
