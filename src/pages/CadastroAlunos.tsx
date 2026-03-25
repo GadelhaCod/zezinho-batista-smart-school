@@ -15,7 +15,7 @@ const CadastroAlunos = () => {
     serie: "",
     email: "",
     numero_matricula: "",
-    cpf: "",
+    
     contato_pai: "",
     email_pai: "",
     horario_entrada: "",
@@ -67,10 +67,6 @@ const CadastroAlunos = () => {
             <div>
               <Label htmlFor="numero_matricula">Número de Matrícula</Label>
               <Input id="numero_matricula" name="numero_matricula" placeholder="Matrícula" value={form.numero_matricula} onChange={handleChange} required />
-            </div>
-            <div>
-              <Label htmlFor="cpf">CPF</Label>
-              <Input id="cpf" name="cpf" placeholder="000.000.000-00" value={form.cpf} onChange={handleChange} />
             </div>
             <div>
               <Label htmlFor="contato_pai">Contato do Pai/Responsável</Label>

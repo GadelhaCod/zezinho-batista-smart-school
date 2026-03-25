@@ -8,6 +8,7 @@ import {
   PieChart,
   Menu,
   X,
+  Settings,
 } from "lucide-react";
 
 const navItems = [
@@ -15,6 +16,7 @@ const navItems = [
   { to: "/alunos", icon: Users, label: "Alunos" },
   { to: "/professores", icon: GraduationCap, label: "Professores" },
   { to: "/administradores", icon: ShieldCheck, label: "Administradores" },
+  { to: "/painel-admin", icon: Settings, label: "Painel Admin" },
   { to: "/relatorios", icon: PieChart, label: "Relatórios" },
 ];
 

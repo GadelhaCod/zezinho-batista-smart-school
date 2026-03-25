@@ -11,6 +11,7 @@ const CadastroAlunos = lazy(() => import("@/pages/CadastroAlunos"));
 const CadastroProfessores = lazy(() => import("@/pages/CadastroProfessores"));
 const CadastroAdministradores = lazy(() => import("@/pages/CadastroAdministradores"));
 const Relatorios = lazy(() => import("@/pages/Relatorios"));
+const PainelAdmin = lazy(() => import("@/pages/PainelAdmin"));
 
 const queryClient = new QueryClient();
 
@@ -64,6 +65,16 @@ const App = () => (
               <AppLayout>
                 <Suspense fallback={<div className="p-8 text-muted-foreground">Carregando...</div>}>
                   <Relatorios />
+                </Suspense>
+              </AppLayout>
+            }
+          />
+          <Route
+            path="/painel-admin"
+            element={
+              <AppLayout>
+                <Suspense fallback={<div className="p-8 text-muted-foreground">Carregando...</div>}>
+                  <PainelAdmin />
                 </Suspense>
               </AppLayout>
             }
