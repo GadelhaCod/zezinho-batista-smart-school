@@ -11,8 +11,10 @@ import FaceDetectionCamera from "@/components/FaceDetectionCamera";
 const CadastroAdministradores = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ nome: "", email: "", senha: "" });
+const [form, setForm] = useState({ nome: "", email: "", senha: "", confirmarSenha: "" });
   const [fotoCapturada, setFotoCapturada] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
