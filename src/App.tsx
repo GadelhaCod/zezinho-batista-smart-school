@@ -69,6 +69,16 @@ const App = () => (
               </AppLayout>
             }
           />
+          <Route
+            path="/painel-admin"
+            element={
+              <AppLayout>
+                <Suspense fallback={<div className="p-8 text-muted-foreground">Carregando...</div>}>
+                  <PainelAdmin />
+                </Suspense>
+              </AppLayout>
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

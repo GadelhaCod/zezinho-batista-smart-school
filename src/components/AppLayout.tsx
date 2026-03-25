@@ -8,6 +8,7 @@ import {
   PieChart,
   Menu,
   X,
+  Settings,
 } from "lucide-react";
 
 const navItems = [
